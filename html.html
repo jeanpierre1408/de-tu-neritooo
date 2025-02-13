@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffd1dc;
+            overflow: hidden;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Sakura petals background */
+        .sakura {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #FFB7C5;
+            border-radius: 50% 0 50% 50%;
+            animation: falling 10s infinite linear;
+            opacity: 0.7;
+        }
+
+        @keyframes falling {
+            0% {
+                transform: translate(0, -100%) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate(100px, 100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            background-color: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 400px;
+            text-align: center;
+        }
+
+        .question {
+            font-size: clamp(24px, 5vw, 32px);
+            margin-bottom: 30px;
+            color: #FF69B4;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .btn {
+            padding: 15px 40px;
+            margin: 10px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: clamp(16px, 4vw, 20px);
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .yes-btn {
+            background-color: #FF69B4;
+            color: white;
+        }
+
+        .yes-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        .no-btn {
+            background-color: #FFB7C5;
+            color: white;
+        }
+
+        .envelope {
+            width: 300px;
+            height: 200px;
+            position: relative;
+            margin: 20px auto;
+            transform-style: preserve-3d;
+            transition: transform 1s ease;
+        }
+
+        @media (max-width: 400px) {
+            .envelope {
+                width: 260px;
+                height: 180px;
+            }
+        }
+
+        .envelope.open {
+            transform: rotateX(0deg);
+        }
+
+        .envelope-body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFB7C5;
+            position: absolute;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .flap {
+            width: 100%;
+            height: 50%;
+            background-color: #FF69B4;
+            position: absolute;
+            top: 0;
+            transform-origin: top;
+            transition: transform 1s ease;
+            border-radius: 15px 15px 0 0;
+            z-index: 2;
+        }
+
+        .envelope.open .flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .letter-content {
+            width: 90%;
+            height: auto;
+            background-color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s ease 0.5s;
+        }
+
+        .envelope.open .letter-content {
+            opacity: 1;
+        }
+
+        .letter-content h2 {
+            font-size: 24px;
+            color: #FF69B4;
+            margin-bottom: 15px;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .letter-content p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        .letter-signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 32px;
+            color: #FF69B4;
+            margin-top: 15px;
+        }
+
+        .kawaii-decoration {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            z-index: 1;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hearts {
+            position: fixed;
+            font-size: 20px;
+            animation: float 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
+            100% { transform: translateY(-200px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Kawaii elements */
+        .kawaii-star {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #FFD700;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: twinkle 1.5s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="game-container">
+        <div class="question">¿ME AMAS?</div>
+        <button class="btn yes-btn" onclick="handleYes()">Sí</button>
+        <button class="btn no-btn" onclick="handleNo()">No</button>
+    </div>
+
+    <script>
+        // Create sakura petals
+        function createSakura() {
+            for(let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const sakura = document.createElement('div');
+                    sakura.className = 'sakura';
+                    sakura.style.left = Math.random() * window.innerWidth + 'px';
+                    sakura.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                    sakura.style.animationDelay = Math.random() * 5 + 's';
+                    document.body.appendChild(sakura);
+
+                    setTimeout(() => sakura.remove(), 10000);
+                }, i * 300);
+            }
+        }
+
+        // Create kawaii stars
+        function createStars() {
+            for(let i = 0; i < 5; i++) {
+                const star = document.createElement('div');
+                star.className = 'kawaii-star';
+                star.style.left = Math.random() * window.innerWidth + 'px';
+                star.style.top = Math.random() * window.innerHeight + 'px';
+                star.style.animationDelay = (Math.random() * 2) + 's';
+                document.body.appendChild(star);
+            }
+        }
+
+        function handleYes(isInitial = true) {
+            const container = document.getElementById('game-container');
+            if (isInitial) {
+                container.innerHTML = `
+                    <div class="question">Lo sabiaa t amoo</div>
+                    <div class="btn yes-btn" onclick="showFinalMessage()">continuar.. ❤️</div>
+                `;
+            } else {
+                showFinalMessage();
+            }
+        }
+
+        function handleNo() {
+            const container = document.getElementById('game-container');
+            container.innerHTML = `
+                <div class="question">Estas segura mi amor?</div>
+                <button class="btn yes-btn" onclick="handleYes(false)">no amor era broma</button>
+                <button class="btn no-btn" id="moving-no">si, no te amo</button>
+            `;
+
+            const noBtn = document.getElementById('moving-no');
+            
+            noBtn.addEventListener('mouseover', () => {
+                const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+                const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+                
+                const newX = Math.random() * maxX;
+                const newY = Math.random() * maxY;
+                
+                noBtn.style.position = 'fixed';
+                noBtn.style.left = newX + 'px';
+                noBtn.style.top = newY + 'px';
+                noBtn.style.transition = 'all 0.2s ease';
+            });
+        }
+
+        function showFinalMessage() {
+            const container = document.getElementById('game-container');
+            container.innerHTML = `
+                <div class="envelope">
+                    <div class="envelope-body"></div>
+                    <div class="flap"></div>
+                    <div class="letter-content">
+                        <h2>Para kasumi ♡</h2>
+                        <p>Desde que te vi, supe algo claro, que contigo los dias son mejores, que tu risa es lo que mas quiero.</p>
+                        <p>no hace falta un motivo especial, solo ganas de estar a tu lado, de hacer de cada momento juntos algo que no queremos que termine</p>
+                        <p>y ahora solo quiero preguntarte, ¿Quieres que pasemos juntos el 14 de febrero?  💝</p>
+                        <div class="letter-signature">Para mi chinita bella ♡</div>
+                    </div>
+                </div>
+            `;
+
+            createHearts();
+            createSakura();
+            createStars();
+            
+            const envelope = document.querySelector('.envelope');
+            setTimeout(() => {
+                envelope.classList.add('open');
+            }, 500);
+        }
+
+        function createHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'hearts';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * window.innerWidth + 'px';
+                heart.style.bottom = '-20px';
+                document.body.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 3000);
+            }, 300);
+        }
+
+        // Initialize stars on load
+        createStars();
+    </script>
+</body>
+</html>
