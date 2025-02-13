@@ -26,7 +26,6 @@
             position: relative;
         }
 
-        /* Sakura petals background */
         .sakura {
             position: absolute;
             width: 20px;
@@ -69,6 +68,17 @@
             color: #FF69B4;
             font-weight: 600;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .image-container {
+            margin: 20px 0;
+            max-width: 100%;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
         }
 
         .btn {
@@ -216,7 +226,6 @@
             100% { transform: translateY(-200px) rotate(360deg); opacity: 0; }
         }
 
-        /* Kawaii elements */
         .kawaii-star {
             position: absolute;
             width: 20px;
@@ -235,44 +244,34 @@
 <body>
     <div class="container" id="game-container">
         <div class="question">¿ME AMAS?</div>
+        <div class="image-container">
+            <img src="https://img-12.stickers.cloud/packs/b57dd4d6-bcd9-48fe-9caa-33a1533fdbf4/webp/b9a03da4-db29-429a-b02f-a4aca93e77b6.webp" alt="Love image 1">
+        </div>
         <button class="btn yes-btn" onclick="handleYes()">Sí</button>
         <button class="btn no-btn" onclick="handleNo()">No</button>
     </div>
 
     <script>
-        // Create sakura petals
-        function createSakura() {
-            for(let i = 0; i < 10; i++) {
-                setTimeout(() => {
-                    const sakura = document.createElement('div');
-                    sakura.className = 'sakura';
-                    sakura.style.left = Math.random() * window.innerWidth + 'px';
-                    sakura.style.animationDuration = (Math.random() * 5 + 5) + 's';
-                    sakura.style.animationDelay = Math.random() * 5 + 's';
-                    document.body.appendChild(sakura);
-
-                    setTimeout(() => sakura.remove(), 10000);
-                }, i * 300);
-            }
-        }
-
-        // Create kawaii stars
-        function createStars() {
-            for(let i = 0; i < 5; i++) {
-                const star = document.createElement('div');
-                star.className = 'kawaii-star';
-                star.style.left = Math.random() * window.innerWidth + 'px';
-                star.style.top = Math.random() * window.innerHeight + 'px';
-                star.style.animationDelay = (Math.random() * 2) + 's';
-                document.body.appendChild(star);
-            }
-        }
+        const questions = [
+            "Estas segura mi amor?",
+            "Seguraaaa?",
+            "Muy seguraaa?",
+            "Segura? Segura?",
+            "De verdad seguraaa?",
+            "Segurisimaaaa?",
+            "Pero seguraaaa?"
+        ];
+        
+        let currentQuestionIndex = 0;
 
         function handleYes(isInitial = true) {
             const container = document.getElementById('game-container');
             if (isInitial) {
                 container.innerHTML = `
                     <div class="question">Lo sabiaa t amoo</div>
+                    <div class="image-container">
+                        <img src="https://img-12.stickers.cloud/packs/b57dd4d6-bcd9-48fe-9caa-33a1533fdbf4/webp/b9a03da4-db29-429a-b02f-a4aca93e77b6.webp" alt="Love image 2">
+                    </div>
                     <div class="btn yes-btn" onclick="showFinalMessage()">continuar.. ❤️</div>
                 `;
             } else {
@@ -283,14 +282,17 @@
         function handleNo() {
             const container = document.getElementById('game-container');
             container.innerHTML = `
-                <div class="question">Estas segura mi amor?</div>
+                <div class="question">${questions[0]}</div>
+                <div class="image-container">
+                    <img src="https://media.stickerswiki.app/catchain/1705070.512.webp" alt="Question image">
+                </div>
                 <button class="btn yes-btn" onclick="handleYes(false)">no amor era broma</button>
                 <button class="btn no-btn" id="moving-no">si, no te amo</button>
             `;
 
             const noBtn = document.getElementById('moving-no');
             
-            noBtn.addEventListener('mouseover', () => {
+            function moveButton(e) {
                 const maxX = window.innerWidth - noBtn.offsetWidth - 20;
                 const maxY = window.innerHeight - noBtn.offsetHeight - 20;
                 
@@ -301,7 +303,19 @@
                 noBtn.style.left = newX + 'px';
                 noBtn.style.top = newY + 'px';
                 noBtn.style.transition = 'all 0.2s ease';
-            });
+
+                // Update question text
+                const questionDiv = container.querySelector('.question');
+                currentQuestionIndex = (currentQuestionIndex + 1) % questions.length;
+                questionDiv.textContent = questions[currentQuestionIndex];
+
+                // Prevent default click behavior
+                e.preventDefault();
+                return false;
+            }
+            
+            noBtn.addEventListener('mouseover', moveButton);
+            noBtn.addEventListener('click', moveButton);
         }
 
         function showFinalMessage() {
@@ -343,6 +357,32 @@
                     heart.remove();
                 }, 3000);
             }, 300);
+        }
+
+        function createStars() {
+            for(let i = 0; i < 5; i++) {
+                const star = document.createElement('div');
+                star.className = 'kawaii-star';
+                star.style.left = Math.random() * window.innerWidth + 'px';
+                star.style.top = Math.random() * window.innerHeight + 'px';
+                star.style.animationDelay = (Math.random() * 2) + 's';
+                document.body.appendChild(star);
+            }
+        }
+
+        function createSakura() {
+            for(let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const sakura = document.createElement('div');
+                    sakura.className = 'sakura';
+                    sakura.style.left = Math.random() * window.innerWidth + 'px';
+                    sakura.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                    sakura.style.animationDelay = Math.random() * 5 + 's';
+                    document.body.appendChild(sakura);
+
+                    setTimeout(() => sakura.remove(), 10000);
+                }, i * 300);
+            }
         }
 
         // Initialize stars on load
